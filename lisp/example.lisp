@@ -1,13 +1,10 @@
-
 (in-package #:breakds.lazy-bone-example.test-app)
 
 (def-view *my-button
     (('tag-name "button")
      ('template "<%= caption %>")
      ('events '(create click "onClick"))
-     ('initialize '(lazy-init (setf 
-                               (@ this caption)
-                               (@ args caption))))
+     ('initialize '(lazy-init (acquire-args (caption) (caption))))
      ('render '(lambda () 
                 ((@ this $el html) 
                  ((@ _ template) 
@@ -18,14 +15,15 @@
 
 (def-model *button-state
     (('initialize '(lambda (args) 
-                    (setf (@ this caption) (@ args caption))
-                    (setf (@ this msg) (@ args msg))))))
+		    (acquire-args 
+		     (caption msg)
+		     (caption msg))))))
                     
 (def-view *signal-button
-    (('initialize '(lazy-init 
-                    (setf (@ this model) (@ args model))
-                    (setf (@ this msg) (@ args model msg))
-                    (setf (@ this caption) (@ args model caption))))
+    (('initialize '(lazy-init
+		    (acquire-args 
+		     (model msg caption)  
+		     (model model.msg model.caption))))
      ('on-click '(lambda () ((@ this model trigger) "clicked" (@ this msg)) nil)))
   :base *my-button)
 
