@@ -14,15 +14,15 @@
      ('on-click '(lambda () nil))))
 
 (def-model *button-state
-    (('initialize '(lambda (args) 
+    (('initialize '(lambda (args)
 		    (acquire-args 
 		     (caption msg)
 		     (caption msg))))))
                     
 (def-view *signal-button
     (('initialize '(lazy-init
-		    (acquire-args 
-		     (model msg caption)  
+		    (acquire-args
+		     (model msg caption) 
 		     (model model.msg model.caption))))
      ('on-click '(lambda () ((@ this model trigger) "clicked" (@ this msg)) nil)))
   :base *my-button)
@@ -36,13 +36,13 @@
                      ((@ ($ "#main") append) (@ ((@ view render)) el))
                      nil))
      ('initialize '(lazy-init
-                    ((@ this collection on) 
+                    ((@ this bind-to)
+                     (@ this collection)
                      "clicked"
-                     (lambda (e)
-                       ((@ this collection rest))
-                       ((@ this lazy-kill) e)
-                       nil)
-                     this)))))
+                     (lambda (e) 
+                       ((@ this collection reset))
+                       ((@ this terminate) e)
+                       nil))))))
 (def-view *gen-button
     (('initialize '(lazy-init 
                     ((@ ($ "#main") append) (@ ((@ this render)) el))))
